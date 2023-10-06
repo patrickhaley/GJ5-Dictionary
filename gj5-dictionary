@@ -1,0 +1,58 @@
+<?php
+/**
+ * Plugin Name: GJ5 Dictionary
+ * Description: A plugin to translate certain words in posts.
+ * Version: 1.0
+ * Author: Your Name
+ */
+
+// Activation hook
+register_activation_hook( __FILE__, 'gj5_dictionary_activate' );
+function gj5_dictionary_activate() {
+    // Initialize your dictionary in the WP database
+}
+
+// Deactivation hook
+register_deactivation_hook( __FILE__, 'gj5_dictionary_deactivate' );
+function gj5_dictionary_deactivate() {
+    // Cleanup
+}
+
+// Add admin menu
+add_action('admin_menu', 'gj5_dictionary_menu');
+function gj5_dictionary_menu() {
+    if ( current_user_can('editor') || current_user_can('administrator') || current_user_can('author') ) {
+        add_menu_page('GJ5 Dictionary', 'GJ5 Dictionary', 'manage_options', 'gj5_dictionary', 'gj5_dictionary_admin_page');
+    }
+}
+
+// Admin page content
+function gj5_dictionary_admin_page() {
+    ?>
+    <h1>GJ5 Dictionary</h1>
+    <p>Lorem ipsum...</p>
+    <!-- Your form goes here, with columns for US, AU, NZ words -->
+    <?php
+}
+
+// Database operations to save and retrieve words
+function save_words_to_db($us, $au, $nz) {
+    // Code to save words
+}
+
+function retrieve_words_from_db() {
+    // Code to retrieve words
+}
+
+// Post content filter
+add_filter('the_content', 'gj5_dictionary_filter_post');
+function gj5_dictionary_filter_post($content) {
+    // Retrieve words from database
+    $words = retrieve_words_from_db();
+    // Loop through words and wrap them with span tags
+    foreach ($words as $word) {
+        $content = preg_replace('/\b'.$word['us'].'\b/', '<span class="translate-block">'.$word['us'].'</span>', $content);
+    }
+    return $content;
+}
+?>
